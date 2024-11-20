@@ -1,12 +1,20 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebDatLich.Data;
+using WebDatLich.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CsdlDuLichContext>(options => 
-{ options.UseSqlServer(builder.Configuration.GetConnectionString("")); });
+{ options.UseSqlServer(builder.Configuration.GetConnectionString("CSDL_DuLich")); });
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<CsdlDuLichContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
