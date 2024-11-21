@@ -1,100 +1,138 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using WebDatLich.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebDatLich.Models;
+using Microsoft.AspNetCore.Identity;
+using WebDatLich.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace WebDatLich.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly CsdlDuLichContext _context;
+		private readonly CsdlDuLichContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, CsdlDuLichContext context)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _context = context;
-        }
+		public AccountController(CsdlDuLichContext context)
+		{
+			_context = context;
+		}
 
-        // Đăng ký
-        [HttpGet]
-        public IActionResult Register()
+		[HttpGet]
+		public IActionResult Login()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Login(LoginViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				// Kiểm tra thông tin đăng nhập
+				var user = await _context.Accounts
+					.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password);
+
+				if (user != null)
+				{
+					// Lưu thông tin vào Session
+					HttpContext.Session.SetString("Username", user.Username);
+
+					//thông tin người dùng
+					var claims = new List<Claim>
+					{
+						new Claim(ClaimTypes.Name, user.Username),
+						new Claim(ClaimTypes.Role, user.Role)
+					};
+
+					// Tạo Identity và Principal
+					var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+					var principal = new ClaimsPrincipal(identity);
+
+					// Tạo thông tin đăng nhập (cookie)
+					var authProperties = new AuthenticationProperties
+					{
+						IsPersistent = model.RememberMe,  // Nếu Remember Me được chọn, cookie sẽ không hết hạn ngay lập tức
+						ExpiresUtc = model.RememberMe ? DateTime.UtcNow.AddDays(30) : (DateTime?)null // Cookie nhớ trong 30 ngày
+					};
+
+					// Đăng nhập người dùng
+					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+					return RedirectToAction("Index", "Home"); 
+				}
+
+				ModelState.AddModelError(string.Empty, "Username hoặc mật khẩu không đúng.");
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Logout()
+		{
+			// Xóa thông tin trong Session
+			HttpContext.Session.Remove("Username");
+			// Đăng xuất khỏi cookie authentication
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Login", "Account");
+		}
+
+
+		public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Username }; 
-                var result = await _userManager.CreateAsync(user, model.Password);
+      	public async Task<IActionResult> Register(RegisterViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				// Kiểm tra nếu người dùng đã tồn tại
+				var existingUser = await _context.Accounts.FirstOrDefaultAsync(u => u.Username == model.Username);
+				if (existingUser != null)
+				{
+					ModelState.AddModelError("Username", "Username đã tồn tại.");
+					return View(model);
+				}
 
-                if (result.Succeeded)
-                {
-                    // Tạo tài khoản mới cho Customer hoặc Employee
-                    var account = new Account
-                    {
-                        Username = model.Username, 
-                        Password = model.Password,
-                        CustomerId = 1,  // Giả sử CustomerId là 1, bạn có thể chọn từ bảng Customer
-                        EmployeeId = 0,  // Giả sử EmployeeId là 0 (nếu không phải admin)
-                    };
+				// Tạo một dòng mới trong bảng Customer
+				var newCustomer = new Customer
+				{
+					FullName = model.Username
+				};
 
-                    _context.Accounts.Add(account);
-                    await _context.SaveChangesAsync();
+				_context.Customers.Add(newCustomer);
+				await _context.SaveChangesAsync();
 
-                    // Đăng nhập ngay sau khi đăng ký
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
-                }
+				// Lấy CustomerId cuối cùng từ bảng Customer
+				var lastCustomerId = await _context.Customers
+					.OrderByDescending(c => c.CustomerId)
+					.FirstOrDefaultAsync();
 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
+				int CustomerId = lastCustomerId != null ? lastCustomerId.CustomerId : 1;
 
-            return View(model);
-        }
+				// Tạo đối tượng Account mới
+				Account account = new Account
+				{
+					Username = model.Username,
+					Password = model.Password,
+					Role = "Customer",
+					EmployeeId = null,
+					CustomerId = CustomerId,
+				};
+				
 
-        // Đăng nhập
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+				// Thêm vào cơ sở dữ liệu
+				_context.Accounts.Add(account);
+				await _context.SaveChangesAsync();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
-        {
-            returnUrl ??= Url.Content("~/");
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                }
-            }
+				return RedirectToAction("Login");
+			}
 
-            return View(model);
-        }
-
-        // Đăng xuất
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
-    }
+			return View(model);
+		}
+	}
 }

@@ -15,6 +15,8 @@ public partial class Customer
 
     public string? Address { get; set; }
 
+    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();

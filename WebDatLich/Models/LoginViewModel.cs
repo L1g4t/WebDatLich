@@ -8,7 +8,7 @@ namespace WebDatLich.Models
         [StringLength(100, ErrorMessage = "Username must be at least 3 characters long.", MinimumLength = 3)]
         public string Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")] 
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

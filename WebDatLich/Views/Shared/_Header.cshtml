@@ -11,8 +11,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Home</a>
-                    <a href="" class="nav-item nav-link">Booking</a>
+                    <a asp-controller="Home" asp-action="Index" class="nav-item nav-link">Home</a>
                     <!--<a href="service.html" class="nav-item nav-link">Services</a>-->
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -23,8 +22,7 @@
                         </div>
                     </div>
                 </div>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary rounded-pill py-2 px-4">Login</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-primary rounded-pill py-2 px-4">Register</a>
+                <partial name="_LoginPatial" />
             </div>
         </nav>
 

@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject ITempDataProvider tempDataProvider
+
+<ul class="navbar-nav ms-auto">
+	@if (Context.Session.GetString("Username") != null)
+	{
+		<div class="nav-item dropdown">
+			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">@Context.Session.GetString("Username")</a>
+			<div class="dropdown-menu m-0">
+				<a asp-controller="Team" asp-action="Index" class="dropdown-item">Info</a>
+				<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Booking</a>
+				<a asp-controller="About" asp-action="Index" class="dropdown-item">Your Tour</a>
+				<div class="dropdown-item">
+					<form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+						<button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; cursor: pointer;">
+							Logout
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+		</li>
+	}
+</ul>
+
