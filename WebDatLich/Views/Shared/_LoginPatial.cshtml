@@ -7,7 +7,7 @@
 		<div class="nav-item dropdown">
 			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">@Context.Session.GetString("Username")</a>
 			<div class="dropdown-menu m-0">
-				<a asp-controller="Team" asp-action="Index" class="dropdown-item">Info</a>
+				<a asp-controller="Info" asp-action="Edit" asp-route-username="@Context.Session.GetString("Username")" class="dropdown-item">Info</a>
 				<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Booking</a>
 				<a asp-controller="About" asp-action="Index" class="dropdown-item">Your Tour</a>
 				<div class="dropdown-item">

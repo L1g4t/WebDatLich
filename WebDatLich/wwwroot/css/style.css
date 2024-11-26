@@ -1,4 +1,4 @@
-/********** Template CSS **********/
+﻿/********** Template CSS **********/
 :root {
     --primary: #86B817;
     --secondary: #FE8800;
@@ -460,4 +460,64 @@
     width:100%;
     opacity:0.9;
 
+}
+
+/*Info*/
+.info-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.info-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-container form div {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.info-container form label {
+    width: 150px; 
+    text-align: left;
+    margin-right: 15px; 
+}
+
+.info-container form input {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.info-text-danger {
+    font-size: 0.9em;
+    color: #e74c3c; 
+}
+
+.info-button {
+    margin-top: 20px;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    text-align: center; 
+    background-color:green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.info-button:hover{
+    background-color:aquamarine;
+}
+
+.info-message {
+    text-align: center;
+    color: green;
+    font-size: 1.1em; 
+    margin-top: 20px;
 }
