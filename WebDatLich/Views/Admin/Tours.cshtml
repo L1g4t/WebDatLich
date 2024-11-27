@@ -1,0 +1,42 @@
+﻿@using WebDatLich.Data
+
+@{
+    ViewData["Title"] = "Tours";
+}
+
+@model IEnumerable<Tour>
+
+<h2>Danh sách Tour</h2>
+<a asp-action="AddTour" class="btn btn-primary">Thêm Tour</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Tour</th>
+            <th>Ngày bắt đầu</th>
+            <th>Giá</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tour in Model)
+        {
+            <tr>
+                <td>@tour.TourId</td>
+                <td>@tour.TourName</td>
+                <td>@tour.Description</td>
+                <td>@tour.Price</td>
+                <td>@tour.StartDay</td>
+                <td>@tour.EndDay</td>
+                <td>
+                    <a asp-action="EditTour" asp-route-id="@tour.TourId" class="btn btn-warning">Sửa</a>
+                    <form asp-action="DeleteTour" asp-route-id="@tour.TourId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

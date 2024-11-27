@@ -5,11 +5,27 @@
 	@if (Context.Session.GetString("Username") != null)
 	{
 		<div class="nav-item dropdown">
-			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">@Context.Session.GetString("Username")</a>
+			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">User</a>
 			<div class="dropdown-menu m-0">
-				<a asp-controller="Info" asp-action="Edit" asp-route-username="@Context.Session.GetString("Username")" class="dropdown-item">Info</a>
-				<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Booking</a>
-				<a asp-controller="About" asp-action="Index" class="dropdown-item">Your Tour</a>
+				@if (Context.Session.GetString("Role") == "Admin")
+				{
+					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Tour đã được đặt</a>
+					<a asp-controller="About" asp-action="Index" class="dropdown-item">Danh sách Tour</a>
+					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Danh sách nhân viên</a>
+					<a asp-controller="About" asp-action="Index" class="dropdown-item">Danh sách khách hàng</a>
+					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Feedbacks</a>
+				}
+				@if (Context.Session.GetString("Role") == "Employee")
+				{
+					<a asp-controller="Info" asp-action="Show" asp-route-username="@Context.Session.GetString("Username")" class="dropdown-item">Info</a>
+					<a asp-controller="About" asp-action="Index" class="dropdown-item">Your Tour</a>
+				}
+				@if (Context.Session.GetString("Role") == "Customer")
+				{
+					<a asp-controller="Info" asp-action="Edit" asp-route-username="@Context.Session.GetString("Username")" class="dropdown-item">Info</a>
+					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Booking</a>
+					<a asp-controller="About" asp-action="Index" class="dropdown-item">Your Tour</a>
+				}
 				<div class="dropdown-item">
 					<form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
 						<button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; cursor: pointer;">

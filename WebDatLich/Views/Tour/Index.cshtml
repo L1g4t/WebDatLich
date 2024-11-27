@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-@model List<TourDestination>
+@model List<Tour>
 <!-- Destination Start -->
 <div class="container-xxl py-5 destination">
     <div class="container">
@@ -19,20 +19,20 @@
                         <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <!-- Hiển thị tên tour -->
-                                <h5 class="mb-0">@tour.Tour.TourName</h5>
+                                <h5 class="mb-0">@tour.TourName</h5>
 
                                 <!-- Hiển thị mô tả tour -->
-                                <p><strong>Description:</strong> @tour.Tour.Description</p>
+                                <p><strong>Description:</strong> @tour.Description</p>
 
                                 <!-- Hiển thị TÊN địa điểm -->
                                 <p><strong>Location:</strong> @tour.Destination.DestinationName</p>
 
                                 <!-- Hiển thị Ngày bắt đầu và ngày kết thúc -->
-                                <p><strong>Start Date:</strong> @tour.Tour.StartDay</p>
-                                <p><strong>End Date:</strong> @tour.Tour.EndDay</p>
+                                <p><strong>Start Date:</strong> @tour.StartDay</p>
+                                <p><strong>End Date:</strong> @tour.EndDay</p>
 
                                 <!-- Hiển thị giá -->
-                                <p><strong>Price:</strong> @tour.Tour.Price.ToString("C")</p>
+                                <p><strong>Price:</strong> @tour.Price.ToString("C")</p>
                             </a>
                         </div>
                     }

@@ -1,0 +1,41 @@
+﻿@using WebDatLich.Data
+
+@{
+    ViewData["Title"] = "Show";
+}
+@model Account
+
+<div class="container-xxl py-5">
+    <div class="info-container">
+        <h2 style="font-size: 24px; font-weight: bold; text-align: center;margin-bottom: 20px;">Thông tin người dùng</h2>
+
+        <form asp-action="Edit" method="post">
+            <div>
+                <label>Tên người dùng:</label>
+                <input type="text" name="username" value="@Model.Username" readonly />
+            </div>
+
+            <div>
+                <label>Tên đầy đủ:</label>
+                <input type="text" value="@Model.Employee?.FullName" readonly/>
+            </div>
+
+            <div>
+                <label>Chức vụ:</label>
+                <input type="text" value="@Model.Employee?.Position" readonly />
+            </div>
+
+            <div>
+                <label>Ngày bắt đầu làm việc:</label>
+                <input type="datetime" value="@Model.Employee?.HireDate" readonly />
+            </div>
+
+            <div>
+                <label>Số điện thoại:</label>
+                <input type="text" value="@Model.Employee?.PhoneNumber" readonly/>
+            </div>
+        </form>
+    </div>
+</div>
+
+

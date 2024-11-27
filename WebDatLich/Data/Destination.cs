@@ -11,5 +11,5 @@ public partial class Destination
 
     public string? Description { get; set; }
 
-    public virtual ICollection<TourDestination> TourDestinations { get; set; } = new List<TourDestination>();
+    public virtual ICollection<Tour> Tours { get; set; } = new List<Tour>();
 }

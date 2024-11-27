@@ -38,9 +38,10 @@ namespace WebDatLich.Controllers
 				{
 					// Lưu thông tin vào Session
 					HttpContext.Session.SetString("Username", user.Username);
+                    HttpContext.Session.SetString("Role", user.Role);
 
-					//thông tin người dùng
-					var claims = new List<Claim>
+                    //thông tin người dùng
+                    var claims = new List<Claim>
 					{
 						new Claim(ClaimTypes.Name, user.Username),
 						new Claim(ClaimTypes.Role, user.Role)

@@ -17,9 +17,11 @@ public partial class Tour
 
     public DateOnly? EndDay { get; set; }
 
+    public int DestinationId { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public virtual Destination Destination { get; set; } = null!;
 
-    public virtual ICollection<TourDestination> TourDestinations { get; set; } = new List<TourDestination>();
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 }

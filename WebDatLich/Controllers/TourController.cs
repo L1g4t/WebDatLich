@@ -14,7 +14,7 @@ namespace WebDatLich.Controllers
         }
         public IActionResult Index()
         {
-            var tour = _context.TourDestinations.Include(tg => tg.Tour).Include(tg => tg.Destination).ToList();
+            var tour = _context.Tours.Include(tg => tg.Destination).ToList();
             return View(tour);
         }
     }
