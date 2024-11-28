@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebDatLich.Data;
 
@@ -23,7 +22,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 	{
 		options.LoginPath = "/Account/Login"; // Trang đăng nhập
 		options.LogoutPath = "/Account/Logout"; // Trang đăng xuất
-	});
+        options.ExpireTimeSpan = TimeSpan.FromDays(1); // Thời gian hết hạn mặc định của cookie
+        options.SlidingExpiration = true; // Cookie sẽ tự động gia hạn khi người dùng truy cập
+    });
 
 builder.Services.AddControllersWithViews();
 

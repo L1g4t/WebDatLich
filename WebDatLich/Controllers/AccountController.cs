@@ -59,7 +59,7 @@ namespace WebDatLich.Controllers
 					};
 
 					// Đăng nhập người dùng
-					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
 					return RedirectToAction("Index", "Home"); 
 				}

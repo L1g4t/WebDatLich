@@ -7,14 +7,34 @@
 @model IEnumerable<Tour>
 
 <h2>Danh sách Tour</h2>
-<a asp-action="AddTour" class="btn btn-primary">Thêm Tour</a>
-<table class="table">
+
+<!-- Form Tìm kiếm -->
+<form asp-action="Tours" method="get">
+    <div class="form-inline">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm theo tên hoặc mô tả" value="@ViewData["CurrentFilter"]" />
+        <button type="submit" class="btn btn-primary ml-2">Tìm kiếm</button>
+    </div>
+</form>
+
+<a asp-action="AddTour" class="btn btn-primary mt-2">Thêm Tour</a>
+
+<table class="table mt-2">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Tên Tour</th>
+            <th>
+                <a asp-action="Tours" asp-route-sortOrder="@ViewData["IdSortParm"]">ID</a>
+            </th>
+            <th>
+                <a asp-action="Tours" asp-route-sortOrder="@ViewData["NameSortParm"]">Tên Tour</a>
+            </th>
+            <th>Mô tả</th>
+            <th>
+                <a asp-action="Tours" asp-route-sortOrder="@ViewData["PriceSortParm"]">Giá</a>
+            </th>
             <th>Ngày bắt đầu</th>
-            <th>Giá</th>
+            <th>Ngày kết thúc</th>
+            <th>Địa điểm</th>
+            <th>Mô tả</th>
             <th>Hành động</th>
         </tr>
     </thead>
@@ -28,6 +48,8 @@
                 <td>@tour.Price</td>
                 <td>@tour.StartDay</td>
                 <td>@tour.EndDay</td>
+                <td>@tour.Destination.DestinationName</td>
+                <td>@tour.Destination.Description</td>
                 <td>
                     <a asp-action="EditTour" asp-route-id="@tour.TourId" class="btn btn-warning">Sửa</a>
                     <form asp-action="DeleteTour" asp-route-id="@tour.TourId" method="post" style="display:inline;">
@@ -38,5 +60,3 @@
         }
     </tbody>
 </table>
-
-

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Build.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace WebDatLich.Data;
@@ -16,7 +17,7 @@ public partial class Tour
     public DateOnly? StartDay { get; set; }
 
     public DateOnly? EndDay { get; set; }
-
+    [Required]
     public int DestinationId { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
