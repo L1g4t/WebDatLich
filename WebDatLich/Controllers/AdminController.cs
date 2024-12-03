@@ -81,7 +81,7 @@ namespace WebDatLich.Controllers
             if (!destinations.Any())
             {
                 TempData["ErrorMessage"] = "Không có địa điểm nào để thêm Tour. Vui lòng thêm địa điểm trước.";
-                return RedirectToAction("Admin", "Destinations");
+                return RedirectToAction("Destination", "AdminDestination");
             }
 
             var model = new AddTourViewModel
@@ -150,6 +150,15 @@ namespace WebDatLich.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTour(int id)
         {
+            // Kiểm tra xem Tour có liên kết với Booking không
+            var isForeignKey = await _context.Bookings.AnyAsync(b => b.TourId == id);
+
+            if (isForeignKey)
+            {
+                TempData["ErrorMessage"] = "Không thể xóa Tour vì đang được sử dụng trong Booking.";
+                return RedirectToAction("Tours","Admin"); // Chuyển hướng về danh sách
+            }
+
             var tour = await _context.Tours.FindAsync(id);
             if (tour == null)
             {
@@ -242,7 +251,7 @@ namespace WebDatLich.Controllers
             if (tour == null)
             {
                 TempData["ErrorMessage"] = "Tour không tồn tại.";
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Tour","Admin");
             }
 
             // Cập nhật thông tin Tour

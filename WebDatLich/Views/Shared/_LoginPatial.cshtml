@@ -9,11 +9,12 @@
 			<div class="dropdown-menu m-0">
 				@if (Context.Session.GetString("Role") == "Admin")
 				{
-					<a asp-controller="Admin" asp-action="Tours" class="dropdown-item">Tour có sẵn</a>
-					<a asp-controller="About" asp-action="Index" class="dropdown-item">Tour đã được đặt</a>
-					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Nhân viên</a>
-					<a asp-controller="About" asp-action="Index" class="dropdown-item">Khách hàng</a>
-					<a asp-controller="Tour" asp-action="Index" class="dropdown-item">Feedbacks</a>
+					<a asp-controller="Admin" asp-action="Tours" class="dropdown-item">DS Tour</a>
+					<a asp-controller="AdminDestination" asp-action="Destination" class="dropdown-item">DS Điểm Đến</a>
+					<a asp-controller="AdminBooking" asp-action="Booking" class="dropdown-item">DS Booking</a>
+					<a asp-controller="AdminEmployee" asp-action="Employee" class="dropdown-item">DS Nhân viên</a>
+					<a asp-controller="AdminCustomer" asp-action="Customer" class="dropdown-item">DS Khách hàng</a>
+					<a asp-controller="AdminFeedbacks" asp-action="Feedbacks" class="dropdown-item">Feedbacks</a>
 				}
 				@if (Context.Session.GetString("Role") == "Employee")
 				{

@@ -1,0 +1,49 @@
+﻿@using WebDatLich.Data
+@{
+    ViewData["Title"] = "EditBooking";
+}
+
+@model EditBookingViewModel
+
+<h2>Sửa</h2>
+<form asp-action="EditBooking" method="post">
+    <input type="hidden" asp-for="BookingId" />
+    <div class="form-group">
+        <label for="BookingDate">Ngày đặt Tour:</label>
+        <input asp-for="BookingDate" type="date" class="form-control" />
+        <span asp-validation-for="BookingDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Status">Trạng thái:</label>
+        <select asp-for="Status" class="form-control">
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="TourId">Tour:</label>
+        <select asp-for="TourId" class="form-control">
+            <option value="0">Chọn tour</option>
+            @foreach (var tour in Model.Tours)
+            {
+                <option value="@tour.Value">@tour.Text</option>
+            }
+        </select>
+        <span asp-validation-for="TourId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="CustomerId">Khách hàng:</label>
+        <select asp-for="CustomerId" class="form-control">
+            <option value="0">Chọn khách hàng</option>
+            @foreach (var customer in Model.Customers)
+            {
+                <option value="@customer.Value">@customer.Text</option>
+            }
+        </select>
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+</form>
+
+

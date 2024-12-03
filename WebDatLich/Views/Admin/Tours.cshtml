@@ -6,6 +6,19 @@
 
 @model IEnumerable<Tour>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
 <h2>Danh sách Tour</h2>
 
 <!-- Form Tìm kiếm -->
