@@ -2,7 +2,7 @@
 
 namespace WebDatLich.Models
 {
-    public class EditBookingViewModel
+    public class AdminBookingViewModel
     {
         public int BookingId { get; set; }
         public DateOnly? BookingDate { get; set; }

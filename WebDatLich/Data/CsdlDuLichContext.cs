@@ -41,7 +41,7 @@ public partial class CsdlDuLichContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Accounts__F3DBC57305B039B4");
+            entity.HasKey(e => e.Username).HasName("PK__Accounts__F3DBC57334CD2C4B");
 
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
@@ -60,16 +60,16 @@ public partial class CsdlDuLichContext : DbContext
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK__Accounts__custom__5FB337D6");
+                .HasConstraintName("FK__Accounts__custom__60A75C0F");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__Accounts__employ__60A75C0F");
+                .HasConstraintName("FK__Accounts__employ__619B8048");
         });
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Bookings__5DE3A5B10D9A7C67");
+            entity.HasKey(e => e.BookingId).HasName("PK__Bookings__5DE3A5B1E7DB8E54");
 
             entity.Property(e => e.BookingId).HasColumnName("booking_id");
             entity.Property(e => e.BookingDate).HasColumnName("booking_date");
@@ -86,17 +86,17 @@ public partial class CsdlDuLichContext : DbContext
             entity.HasOne(d => d.Customer).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Bookings__custom__5070F446");
+                .HasConstraintName("FK__Bookings__custom__5629CD9C");
 
             entity.HasOne(d => d.Tour).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.TourId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Bookings__tour_i__5165187F");
+                .HasConstraintName("FK__Bookings__tour_i__571DF1D5");
         });
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__CD65CB8564B5C07F");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__CD65CB859277D034");
 
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
             entity.Property(e => e.Address)
@@ -118,7 +118,7 @@ public partial class CsdlDuLichContext : DbContext
 
         modelBuilder.Entity<Destination>(entity =>
         {
-            entity.HasKey(e => e.DestinationId).HasName("PK__Destinat__55015391CC33EEF4");
+            entity.HasKey(e => e.DestinationId).HasName("PK__Destinat__5501539108393012");
 
             entity.Property(e => e.DestinationId).HasColumnName("destination_id");
             entity.Property(e => e.Description)
@@ -132,7 +132,7 @@ public partial class CsdlDuLichContext : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C52E0BA815DD8FAF");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C52E0BA8EDF39BEC");
 
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.FullName)
@@ -152,7 +152,7 @@ public partial class CsdlDuLichContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8C38481EC1");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8C16B8AD1F");
 
             entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
             entity.Property(e => e.Comments)
@@ -165,17 +165,17 @@ public partial class CsdlDuLichContext : DbContext
             entity.HasOne(d => d.Customer).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Feedbacks__custo__5BE2A6F2");
+                .HasConstraintName("FK__Feedbacks__custo__5CD6CB2B");
 
             entity.HasOne(d => d.Tour).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.TourId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Feedbacks__tour___5CD6CB2B");
+                .HasConstraintName("FK__Feedbacks__tour___5DCAEF64");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__ED1FC9EA923C4AE3");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__ED1FC9EA1BC8DF3B");
 
             entity.Property(e => e.PaymentId).HasColumnName("payment_id");
             entity.Property(e => e.Amount)
@@ -191,12 +191,12 @@ public partial class CsdlDuLichContext : DbContext
             entity.HasOne(d => d.Booking).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payments__bookin__5629CD9C");
+                .HasConstraintName("FK__Payments__bookin__59FA5E80");
         });
 
         modelBuilder.Entity<Tour>(entity =>
         {
-            entity.HasKey(e => e.TourId).HasName("PK__Tours__4B16B9E68E4A01E7");
+            entity.HasKey(e => e.TourId).HasName("PK__Tours__4B16B9E668FB5C36");
 
             entity.Property(e => e.TourId).HasColumnName("tour_id");
             entity.Property(e => e.Description)
@@ -204,6 +204,7 @@ public partial class CsdlDuLichContext : DbContext
                 .HasColumnName("description");
             entity.Property(e => e.DestinationId).HasColumnName("destination_id");
             entity.Property(e => e.EndDay).HasColumnName("end_day");
+            entity.Property(e => e.GuideId).HasColumnName("guide_id");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
@@ -216,12 +217,17 @@ public partial class CsdlDuLichContext : DbContext
             entity.HasOne(d => d.Destination).WithMany(p => p.Tours)
                 .HasForeignKey(d => d.DestinationId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tours__destinati__4BAC3F29");
+                .HasConstraintName("FK__Tours__destinati__5070F446");
+
+            entity.HasOne(d => d.Guide).WithMany(p => p.Tours)
+                .HasForeignKey(d => d.GuideId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Tours__guide_id__5165187F");
         });
 
         modelBuilder.Entity<TourGuide>(entity =>
         {
-            entity.HasKey(e => e.GuideId).HasName("PK__TourGuid__04A82241575A3AD7");
+            entity.HasKey(e => e.GuideId).HasName("PK__TourGuid__04A822417F30DD0C");
 
             entity.Property(e => e.GuideId).HasColumnName("guide_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
@@ -231,10 +237,10 @@ public partial class CsdlDuLichContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("language_spoken");
 
-            entity.HasOne(d => d.Employee).WithMany(p => p.TourGuides)
-                .HasForeignKey(d => d.EmployeeId)
+            entity.HasOne(d => d.Employee).WithOne(p => p.TourGuides)
+                .HasForeignKey<TourGuide>(t => t.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TourGuide__emplo__59063A47");
+                .HasConstraintName("FK__TourGuide__emplo__4D94879B");
         });
 
         OnModelCreatingPartial(modelBuilder);

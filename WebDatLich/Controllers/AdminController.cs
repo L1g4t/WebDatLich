@@ -20,49 +20,16 @@ namespace WebDatLich.Controllers
             // Tạo query cho các tour
             var toursQuery = _context.Tours
                 .Include(t => t.Destination)
+                .Include(t =>t.Guide.Employee)
                 .AsQueryable();
 
             // Nếu có tìm kiếm, thêm điều kiện tìm kiếm vào query
             if (!string.IsNullOrEmpty(searchString))
             {
-                toursQuery = toursQuery.Where(t => t.TourName.Contains(searchString) || t.Description.Contains(searchString));
+                toursQuery = toursQuery.Where(t => t.TourName.Contains(searchString) || t.Guide.Employee.FullName.Contains(searchString));
             }
 
-            // Xử lý sắp xếp theo cột
-            switch (sortOrder)
-            {
-                case "id_asc":
-                    toursQuery = toursQuery.OrderBy(t => t.TourId);
-                    break;
-                case "id_desc":
-                    toursQuery = toursQuery.OrderByDescending(t => t.TourId);
-                    break;
-                case "name_asc":
-                    toursQuery = toursQuery.OrderBy(t => t.TourName);
-                    break;
-                case "name_desc":
-                    toursQuery = toursQuery.OrderByDescending(t => t.TourName);
-                    break;
-                case "price_asc":
-                    toursQuery = toursQuery.OrderBy(t => t.Price);
-                    break;
-                case "price_desc":
-                    toursQuery = toursQuery.OrderByDescending(t => t.Price);
-                    break;
-                default:
-                    toursQuery = toursQuery.OrderBy(t => t.TourId); // Sắp xếp mặc định theo ID
-                    break;
-            }
-
-            // Lấy danh sách các tour đã lọc và sắp xếp
             var tours = await toursQuery.ToListAsync();
-
-            // Truyền các tham số sắp xếp và tìm kiếm vào ViewData để dùng trong View
-            ViewData["CurrentFilter"] = searchString;
-            ViewData["IdSortParm"] = sortOrder == "id_asc" ? "id_desc" : "id_asc";
-            ViewData["NameSortParm"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";
-            ViewData["PriceSortParm"] = sortOrder == "price_asc" ? "price_desc" : "price_asc";
-
             return View(tours);
         }
 
@@ -81,19 +48,34 @@ namespace WebDatLich.Controllers
             if (!destinations.Any())
             {
                 TempData["ErrorMessage"] = "Không có địa điểm nào để thêm Tour. Vui lòng thêm địa điểm trước.";
-                return RedirectToAction("Destination", "AdminDestination");
+                return RedirectToAction("Tours", "Admin");
             }
 
-            var model = new AddTourViewModel
+            var guide = _context.TourGuides
+                .Select(d => new SelectListItem
+                {
+                    Value = d.GuideId.ToString(),
+                    Text = d.Employee.FullName
+                })
+                .ToList();
+
+            if (!guide.Any())
             {
-                Destinations = destinations
+                TempData["ErrorMessage"] = "Không có tour guide để thêm Tour.";
+                return RedirectToAction("Tours", "Admin");
+            }
+
+            var model = new AdminTourViewModel
+            {
+                Destinations = destinations,
+                TourGuide = guide
             };
 
             return View(model);
         }
 
 		[HttpPost]
-        public async Task<IActionResult> AddTour(AddTourViewModel model)
+        public async Task<IActionResult> AddTour(AdminTourViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -105,13 +87,21 @@ namespace WebDatLich.Controllers
                         Text = d.DestinationName
                     })
                     .ToList();
+                model.TourGuide = _context.TourGuides
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.GuideId.ToString(),
+                        Text = d.Employee.FullName
+                    })
+                    .ToList();
 
                 return View(model);
             }
 
             var destinationExists = await _context.Destinations
                 .AnyAsync(d => d.DestinationId == model.DestinationId);
-
+            var tourguideExists = await _context.TourGuides
+                .AnyAsync(d => d.GuideId == model.GuideId);
             if (!destinationExists)
             {
                 ModelState.AddModelError("DestinationId", "Địa điểm không hợp lệ.");
@@ -127,6 +117,21 @@ namespace WebDatLich.Controllers
 
                 return View(model);
             }
+            if (!tourguideExists)
+            {
+                ModelState.AddModelError("GuideId", "Tour guide không hợp lệ.");
+
+                // Load lại danh sách địa điểm
+                model.TourGuide = _context.TourGuides
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.GuideId.ToString(),
+                        Text = d.Employee.FullName
+                    })
+                    .ToList();
+
+                return View(model);
+            }
 
             var tour = new Tour
             {
@@ -135,7 +140,8 @@ namespace WebDatLich.Controllers
                 Price = model.Price,
                 StartDay = model.StartDay,
                 EndDay = model.EndDay,
-                DestinationId = model.DestinationId
+                DestinationId = model.DestinationId,
+                GuideId= model.GuideId
             };
 
             // Lưu tour vào cơ sở dữ liệu
@@ -152,11 +158,17 @@ namespace WebDatLich.Controllers
         {
             // Kiểm tra xem Tour có liên kết với Booking không
             var isForeignKey = await _context.Bookings.AnyAsync(b => b.TourId == id);
+            var isForeignKey2 = await _context.Feedbacks.AnyAsync(b => b.TourId == id);
 
             if (isForeignKey)
             {
-                TempData["ErrorMessage"] = "Không thể xóa Tour vì đang được sử dụng trong Booking.";
+                TempData["ErrorMessage"] = "Không thể xóa vì tour đã được đặt.";
                 return RedirectToAction("Tours","Admin"); // Chuyển hướng về danh sách
+            }
+            if (isForeignKey2)
+            {
+                TempData["ErrorMessage"] = "Không thể xóa vì tour đang được đánh giá.";
+                return RedirectToAction("Tours", "Admin");
             }
 
             var tour = await _context.Tours.FindAsync(id);
@@ -177,7 +189,8 @@ namespace WebDatLich.Controllers
         public async Task<IActionResult> EditTour(int id)
         {
             var tour = await _context.Tours
-                .Include(t => t.Destination)  
+                .Include(t => t.Destination) 
+                .Include(t=>t.Guide)
                 .FirstOrDefaultAsync(t => t.TourId == id);
 
             if (tour == null)
@@ -186,7 +199,7 @@ namespace WebDatLich.Controllers
                 return RedirectToAction("Tours", "Admin");
             }
 
-            var model = new EditTourViewModel
+            var model = new AdminTourViewModel
             {
                 TourId = tour.TourId,
                 TourName = tour.TourName,
@@ -201,6 +214,14 @@ namespace WebDatLich.Controllers
                         Value = d.DestinationId.ToString(),
                         Text = d.DestinationName
                     })
+                    .ToListAsync(),
+                GuideId = tour.GuideId,
+                TourGuide = await _context.TourGuides
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.GuideId.ToString(),
+                        Text = d.Employee.FullName
+                    })
                     .ToListAsync()
             };
 
@@ -209,7 +230,7 @@ namespace WebDatLich.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTour(EditTourViewModel model)
+        public async Task<IActionResult> EditTour(AdminTourViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -221,31 +242,55 @@ namespace WebDatLich.Controllers
                         Text = d.DestinationName
                     })
                     .ToListAsync();
+                model.TourGuide = _context.TourGuides
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.GuideId.ToString(),
+                        Text = d.Employee.FullName
+                    })
+                    .ToList();
 
                 return View(model);
             }
 
             var destinationExists = await _context.Destinations
                 .AnyAsync(d => d.DestinationId == model.DestinationId);
-
+            var tourguideExists = await _context.TourGuides
+                            .AnyAsync(d => d.GuideId == model.GuideId);
             if (!destinationExists)
             {
                 ModelState.AddModelError("DestinationId", "Địa điểm không hợp lệ.");
 
                 // Load lại danh sách địa điểm
-                model.Destinations = await _context.Destinations
+                model.Destinations = _context.Destinations
                     .Select(d => new SelectListItem
                     {
                         Value = d.DestinationId.ToString(),
                         Text = d.DestinationName
                     })
-                    .ToListAsync();
+                    .ToList();
+
+                return View(model);
+            }
+            if (!tourguideExists)
+            {
+                ModelState.AddModelError("GuideId", "Tour guide không hợp lệ.");
+
+                // Load lại danh sách địa điểm
+                model.TourGuide = _context.TourGuides
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.GuideId.ToString(),
+                        Text = d.Employee.FullName
+                    })
+                    .ToList();
 
                 return View(model);
             }
 
             var tour = await _context.Tours
                 .Include(t => t.Destination)
+                .Include(t=>t.Guide)
                 .FirstOrDefaultAsync(t => t.TourId == model.TourId);
 
             if (tour == null)
@@ -261,6 +306,8 @@ namespace WebDatLich.Controllers
             tour.StartDay = model.StartDay;
             tour.EndDay = model.EndDay;
             tour.DestinationId = model.DestinationId;
+            tour.TourId= model.TourId;
+            tour.GuideId = model.GuideId;
 
             // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();

@@ -1,0 +1,21 @@
+Cách cập nhật csdl mỗi khi lúc mới clone dự án nè 
+
+Nếu có csdl CŨ được tạo hoàn toàn từ lệnh SQL thì xóa đi 
+
+Sau đó mở Package Manager Console lên trong Tools á 
+
+Nhập lệnh Update-Database
+
+Một cái database trống sẽ được tạo nếu database đó chưa tồn tại
+
+Mở file SQL ra lấy lệnh SQL khởi tạo dữ liệu mẫu để add dữ liệu vào là dùng được bth 
+
+Sau này thì mỗi lần pull mà có thay đổi trong db thì chỉ cần Update-Database là mọi thay đổi liên quan đến database do người khác cài sẽ tự động được cập nhật lên db của mình ( chỉ db được tạo từ update-database thôi nhé db được tạo bằng SQL thủ công báo lỗi đó).
+
+Mọi thay đổi liên quan tới db thì làm trong này luôn không làm qua SQL Manager nữa.
+
+Để lưu thay đổi dùng lệnh Add-Migration <TênMigration>
+Để xóa thay đổi dùng lệnh Remove-Migration 
+Để cập nhật db dùng lệnh Update-Database
+
+Dùng trong Package Manager Console nhé 

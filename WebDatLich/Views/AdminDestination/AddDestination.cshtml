@@ -1,0 +1,22 @@
+﻿@using WebDatLich.Data
+@{
+    ViewData["Title"] = "AddDestination";
+}
+
+@model AdminDestinationViewModel
+
+<h2>Thêm mới</h2>
+<form asp-action="AddDestination" method="post">
+    <div class="form-group">
+        <label for="DestinationName">Tên địa điểm:</label>
+        <input asp-for="DestinationName" type="text" class="form-control" />
+        <span asp-validation-for="DestinationName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Description">Mô tả:</label>
+        <input asp-for="Description" type="text" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm địa điểm</button>
+</form>
+

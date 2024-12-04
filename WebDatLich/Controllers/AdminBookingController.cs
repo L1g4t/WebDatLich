@@ -65,7 +65,7 @@ namespace WebDatLich.Controllers
                 return RedirectToAction("Tours", "Admin");
             }
 
-            var model = new AddBookingViewModel
+            var model = new AdminBookingViewModel
             {
                 Customers = customer,
                 Tours = tour
@@ -75,7 +75,7 @@ namespace WebDatLich.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBooking(AddBookingViewModel model)
+        public async Task<IActionResult> AddBooking(AdminBookingViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -179,7 +179,7 @@ namespace WebDatLich.Controllers
                 return RedirectToAction("Booking", "AdminBooking");
             }
 
-            var model = new EditBookingViewModel
+            var model = new AdminBookingViewModel
             {
                 BookingId = booking.BookingId,
                 BookingDate = booking.BookingDate,
@@ -207,7 +207,7 @@ namespace WebDatLich.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBooking(EditBookingViewModel model)
+        public async Task<IActionResult> EditBooking(AdminBookingViewModel model)
         {
             if (!ModelState.IsValid)
             {

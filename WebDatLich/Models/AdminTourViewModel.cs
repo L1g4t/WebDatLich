@@ -3,7 +3,7 @@ using Microsoft.Build.Framework;
 
 namespace WebDatLich.Models
 {
-    public class EditTourViewModel
+    public class AdminTourViewModel
     {
         public int TourId { get; set; }
 
@@ -20,6 +20,8 @@ namespace WebDatLich.Models
         public int DestinationId { get; set; }
 
         public List<SelectListItem> Destinations { get; set; } = new List<SelectListItem>();
+        public int GuideId { get; set; }
+        public List<SelectListItem> TourGuide { get; set; } = new List<SelectListItem>();
     }
 
 }
