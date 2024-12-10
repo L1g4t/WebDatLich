@@ -2,12 +2,40 @@
 
 @{
     ViewData["Title"] = "Index";
+
 }
+
+@model WebDatLich.Data.Tour
+
+
 <!-- Destination Start -->
 <div class="container-xxl py-5 destination">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-center text-primary px-3">Check Out</h6>
+            <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
+                <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
+                    <a class="position-relative d-block overflow-hidden">
+                        <!-- Hiển thị tên tour mà ngươi dùng đã đặt -->
+                        <h5 class="mb-0">@Model.TourName</h5>
+
+                        <!-- Hiển thị ngày người dùng đặt -->
+                        <p><strong>Ngày đặt:</strong> @DateTime.Today.ToString("d")</p>
+
+                        <!-- Hiển thị TÊN địa điểm người dùng đã -->
+                        <p><strong>Location:</strong> @Model.Destination.DestinationName</p>
+
+                        <!-- Hiển thị Ngày bắt đầu và ngày kết thúc -->
+                        <p><strong>Start Date:</strong> @Model.StartDay</p>
+                        <p><strong>End Date:</strong> @Model.EndDay</p>
+
+                        <!-- Hiển thị giá của tour -->
+                        <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+
+                        <a asp-action="CheckOutForm" asp-route-id="@Model.TourId" class="btn btn-primary mt-2">Thanh Toán</a>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,58 @@
+﻿@using WebDatLich.Data
+@model CheckoutViewModel
+
+@{
+    ViewData["Title"] = "CheckOutForm";
+}
+
+
+
+<h2>Thanh Toán</h2>
+<form asp-action="BookTour" method="post">
+    <div class="form-group">
+        <label for="FullName" required>Tên Khách: </label>
+        <input asp-for="FullName" class="form-control" data="@Model.FullName"/>
+        <span asp-validation-for="Customers" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Email" required >Email: </label>
+        <input asp-for="Email" class="form-control" data="@Model.Email" />
+        <span asp-validation-for="Customers" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber" > Số điện Thoại:</label>
+        <input asp-for="PhoneNumber" type="number" class="form-control" data="@Model.PhoneNumber" />
+        <span asp-validation-for="Customers" class="text-danger"></span> 
+    </div>
+    <div class="form-group">
+        <label for="Address">Địa Chỉ:</label>
+        <input asp-for="Address" class="form-control" data="@Model.Address" />
+        <span asp-validation-for="Customers" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Phương thức thanh toán:</label>
+        <select name="PaymentMethod" required asp-for="PaymentMethod">
+            <option value="">-- Chọn phương thức --</option>
+            <option value="Cash">Tiền mặt</option>
+            <option value="BankTransfer">Chuyển khoản ngân hàng</option>
+            <option value="OnlinePayment">Thanh toán trực tuyến</option>
+            <option value="CreaditsCard">Thẻ Ngân Hàng</option>
+            <option value="Paypal">Pay pal</option>
+        </select>
+ 
+        <span asp-validation-for="Payment" class="text-danger"></span>
+    </div>
+    <div>
+        <input type="hidden" asp-for="TourId" />
+    </div>
+
+    <div class="form-group">
+        <label for="Price">Giá:</label>
+        <input asp-for="TotalPrice" class="form-control" data="@Model.TotalPrice" disabled/>
+        <span asp-validation-for="Payment" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" value="BookTour">Thanh Toán</button>
+</form> 
+
+

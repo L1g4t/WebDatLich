@@ -18,21 +18,23 @@
                     {
                         <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
                             <a class="position-relative d-block overflow-hidden" href="">
-                                <!-- Hiển thị tên tour -->
-                                <h5 class="mb-0">@tour.TourName</h5>
+                                <a asp-controller="Checkout" asp-action="Index" asp-route-id="@tour.TourId">
+                                    <!-- Hiển thị tên tour -->
+                                    <h5 class="mb-0">@tour.TourName</h5>
 
-                                <!-- Hiển thị mô tả tour -->
-                                <p><strong>Description:</strong> @tour.Description</p>
+                                    <!-- Hiển thị mô tả tour -->
+                                    <p><strong>Description:</strong> @tour.Description</p>
 
-                                <!-- Hiển thị TÊN địa điểm -->
-                                <p><strong>Location:</strong> @tour.Destination.DestinationName</p>
+                                    <!-- Hiển thị TÊN địa điểm -->
+                                    <p><strong>Location:</strong> @tour.Destination.DestinationName</p>
 
-                                <!-- Hiển thị Ngày bắt đầu và ngày kết thúc -->
-                                <p><strong>Start Date:</strong> @tour.StartDay</p>
-                                <p><strong>End Date:</strong> @tour.EndDay</p>
+                                    <!-- Hiển thị Ngày bắt đầu và ngày kết thúc -->
+                                    <p><strong>Start Date:</strong> @tour.StartDay</p>
+                                    <p><strong>End Date:</strong> @tour.EndDay</p>
 
-                                <!-- Hiển thị giá -->
-                                <p><strong>Price:</strong> @tour.Price.ToString("C")</p>
+                                    <!-- Hiển thị giá -->
+                                    <p><strong>Price:</strong> @tour.Price.ToString("C")</p>
+                                </a>
                             </a>
                         </div>
                     }
