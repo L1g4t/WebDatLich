@@ -26,6 +26,11 @@ namespace WebDatLich.Controllers
         [HttpGet]
         public IActionResult CheckOutForm(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["LoginRequired"] = "Bạn cần phải đăng nhập";
+                return RedirectToAction("Login", "Account");
+            }
             var account = HttpContext.Session.GetString("Username");
             var tour = _context.Tours.FirstOrDefault(t => t.TourId == id);
             var customers = _context.Customers
